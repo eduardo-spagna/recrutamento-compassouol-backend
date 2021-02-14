@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRequestDTO;
+import com.compassouol.backendrecruitment.dtos.request.customer.UpdateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.dtos.response.ResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.city.ShowCityResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.customer.CreateCustomerResponseDTO;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -165,6 +167,48 @@ public class CustomerController {
             e.printStackTrace();
             ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
                     "customer/listing-error", "Ocorreu um erro ao exibir os dados do cliente", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/{customerId}")
+    @ApiOperation(value = "Update a customer")
+    public ResponseEntity<ResponseDTO<ShowCustomerResponseDTO>> update(
+            @Valid @RequestBody UpdateCustomerRequestDTO updateCustomer, @PathVariable long customerId) {
+        try {
+            Customer customer = customerService.findById(customerId);
+
+            if (customer == null) {
+                ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                        "customer/customer-not-found", "Cliente não encontrado", null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            Customer updatedCustomer = customerService.update(updateCustomer, customer);
+
+            int customerAge = DateUtil.getAgeFromBirthdate(updatedCustomer.getCustomerBirthdate());
+
+            ShowGenderResponseDTO showGenderResponseDTO = new ShowGenderResponseDTO(
+                    updatedCustomer.getGender().getGenderId(), updatedCustomer.getGender().getGenderDescription());
+
+            ShowCityResponseDTO showCityResponseDTO = new ShowCityResponseDTO(updatedCustomer.getCity().getCityId(),
+                    updatedCustomer.getCity().getCityName(),
+                    new ShowStateResponseDTO(updatedCustomer.getCity().getState().getStateId(),
+                            updatedCustomer.getCity().getState().getStateName(),
+                            updatedCustomer.getCity().getState().getStateShortName()));
+
+            ShowCustomerResponseDTO showCustomerResponseDTO = new ShowCustomerResponseDTO(
+                    updatedCustomer.getCustomerId(), updatedCustomer.getCustomerName(),
+                    updatedCustomer.getCustomerBirthdate(), customerAge, showGenderResponseDTO, showCityResponseDTO);
+
+            ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                    "customer/successfully-updated", "Cliente atualizado com sucesso", showCustomerResponseDTO);
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                    "customer/listing-error", "Ocorreu um erro ao atualizar o cliente", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
