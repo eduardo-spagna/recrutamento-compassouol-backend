@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -209,6 +210,29 @@ public class CustomerController {
             e.printStackTrace();
             ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
                     "customer/listing-error", "Ocorreu um erro ao atualizar o cliente", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @DeleteMapping("/{customerId}")
+    @ApiOperation(value = "Delete a customer")
+    public ResponseEntity<?> delete(@PathVariable long customerId) {
+        try {
+            Customer customer = customerService.findById(customerId);
+
+            if (customer == null) {
+                ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                        "customer/customer-not-found", "Cliente não encontrado", null);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            customerService.delete(customer);
+
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                    "customer/deleting-error", "Ocorreu um erro ao excluir o cliente", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
