@@ -62,4 +62,8 @@ public class CustomerService {
 
         return null;
     }
+
+    public void delete(Customer customer) {
+        customerRepository.delete(customer);
+    }
 }
