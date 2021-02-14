@@ -1,9 +1,11 @@
 package com.compassouol.backendrecruitment.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRequestDTO;
+import com.compassouol.backendrecruitment.dtos.request.customer.UpdateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.models.City;
 import com.compassouol.backendrecruitment.models.Customer;
 import com.compassouol.backendrecruitment.models.Gender;
@@ -28,6 +30,17 @@ public class CustomerService {
         customer.setCity(city);
 
         return customerRepository.save(customer);
+    }
+
+    public Customer update(UpdateCustomerRequestDTO updateCustomer, Customer currentCustomer) {
+        if (updateCustomer.getCustomerName() != null) {
+            currentCustomer.setCustomerName(updateCustomer.getCustomerName());
+            currentCustomer.setCustomerNameNormalized(StringUtil.normalizeString(updateCustomer.getCustomerName()));
+        }
+
+        currentCustomer.setCustomerUpdatedAt(LocalDateTime.now());
+
+        return customerRepository.save(currentCustomer);
     }
 
     public List<Customer> findAllWithSearch(String search) {
