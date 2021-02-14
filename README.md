@@ -15,7 +15,7 @@ Considere o cadastro com dados básicos:
 * Cidades: nome e estado
 * Cliente: nome completo, sexo, data de nascimento, idade e cidade onde mora.
 
-## Rodar o projeto com o Docker ou localmente (se tiver ambiente configurado)
+## Rodar o projeto com o Docker ou localmente com o ambiente configurado
 
 ### Docker
 
@@ -29,11 +29,11 @@ A API e o Banco de Dados já estarão configurados e prontos para utilização.
 
 ### Localmente com ambiente configurado
 
-Primeiramente será necessário configurar as variáveis de ambiente. Para isso, no arquivo que se encontra no diretório "src\main\resources\application-dev.properties" há um exemplo com variáveis de ambiente.
+Primeiramente será necessário configurar as variáveis de ambiente. Para isso, no arquivo que se encontra no diretório "src\main\resources\application-dev.properties" há um exemplo com variáveis de ambiente. Basta copiar os dados desse arquivo e colar outro arquivo do mesmo diretório chamado "application.properties".
 
-Basta copiá-lo e colá-lo no outro arquivo do mesmo diretório chamado "application.properties".
+Em seguida, será necessário configurar um banco de dados localmente e informar as credenciais corretas no arquivo "application.properties".
 
-Será necessário também configurar um banco de dados localmente e informar as credenciais corretas no arquivo "application.properties".
+A API pode ser iniciada clicando com o botão direito do mouse e "Run" na classe "src\main\java\com\compassouol\backendrecruitment\BackendRecruitmentApplication.java".
 
 ### Link e documentação da API
 
@@ -47,6 +47,12 @@ As migrações e documentação do banco de dados se encontram no diretório "sr
 
 ## Ferramentas e outras explicações
 
+### Swagger
+
+o Swagger é uma ferramenta para documentação de API's. Ela foi utilizada nesse projeto pela sua facilidade de integração e também pela garantia de que a API sempre estará com sua documentação de endpoints atualizada, uma vez que não é necessário salvar tal documentação em arquivos externos com risco de esquecimento, por exemplo.
+
+Link para documentação: https://swagger.io/
+
 ### Flyway DB
 
 O Flyway é uma ferramenta de migração de banco de dados. Ela foi utilizada nesse projeto para tornar explícitas todas as alterações no banco de dados como: criação de tabelas, inserções, alterações em atributos, etc...
@@ -54,6 +60,12 @@ O Flyway é uma ferramenta de migração de banco de dados. Ela foi utilizada ne
 Após configurar as variáveis de ambiente necessárias, a ferramenta buscará por códigos .sql para realizar as migrações. Tais códigos podem ser encontrados no diretório "src\main\resources\database\migrations".
 
 Link para documentação: https://flywaydb.org/
+
+### Lombok
+
+O Lombok é uma biblioteca Java focada em produtividade e redução de código. Ela foi utilizada nesse projeto para reduzir "códigos sujos" como getters, setters, toString, equals, etc...
+
+Link para documentação: https://projectlombok.org/
 
 ### Por que não há o cadastro da idade do cliente?
 
