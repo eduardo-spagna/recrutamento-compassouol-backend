@@ -1,0 +1,1 @@
+ALTER TABLE customers ADD CONSTRAINT customers_city_id_fkey FOREIGN KEY (city_id) REFERENCES cities(city_id) ON DELETE CASCADE ON UPDATE CASCADE;
