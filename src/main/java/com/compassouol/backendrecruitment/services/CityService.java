@@ -20,10 +20,8 @@ public class CityService {
     public City create(CreateCityRequestDTO createCity, State state) {
         City city = new City();
 
-        StringUtil stringUtil = new StringUtil();
-
         city.setCityName(createCity.getCityName());
-        city.setCityNameNormalized(stringUtil.normalizeString(createCity.getCityName()));
+        city.setCityNameNormalized(StringUtil.normalizeString(createCity.getCityName()));
         city.setState(state);
 
         return cityRepository.save(city);
@@ -33,8 +31,7 @@ public class CityService {
         if (search == null) {
             search = "";
         } else {
-            StringUtil stringUtil = new StringUtil();
-            search = stringUtil.normalizeString(search);
+            search = StringUtil.normalizeString(search);
         }
 
         return cityRepository.findAllWithSearch(search);
