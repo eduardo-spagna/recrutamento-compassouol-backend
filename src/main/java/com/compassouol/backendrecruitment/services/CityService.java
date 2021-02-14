@@ -1,6 +1,7 @@
 package com.compassouol.backendrecruitment.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.compassouol.backendrecruitment.dtos.request.city.CreateCityRequestDTO;
 import com.compassouol.backendrecruitment.models.City;
@@ -37,5 +38,15 @@ public class CityService {
         }
 
         return cityRepository.findAllWithSearch(search);
+    }
+
+    public City findById(long id) {
+        Optional<City> city = cityRepository.findById(id);
+
+        if (city.isPresent() == true) {
+            return city.get();
+        }
+
+        return null;
     }
 }
