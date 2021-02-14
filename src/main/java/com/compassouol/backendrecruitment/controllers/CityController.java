@@ -48,7 +48,7 @@ public class CityController {
             if (state == null) {
                 ResponseDTO<CreateCityResponseDTO> response = new ResponseDTO<CreateCityResponseDTO>(
                         "city/state-not-found", "Estado não encontrado", null);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
             City newCity = cityService.create(createCity, state);
