@@ -1,0 +1,47 @@
+version: "3"
+services:
+  database:
+    image: postgres:latest
+    container_name: compasso_database
+    environment:
+      - POSTGRES_DB=compasso_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - TZ=GMT
+    ports:
+      - 5432:5432
+    networks:
+      - postgres_net
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+  api:
+    container_name: compasso_api
+    restart: on-failure
+    environment:
+      - PORT=8080
+      - ENVIRONMENT=development
+      - DATABASE_HOST=database
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=compasso_db
+      - DATABASE_USERNAME=admin
+      - DATABASE_PASSWORD=admin
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint:
+      - java
+      - -jar
+      - -Djava.security.egd=file:/dev/./urandom
+      - /app.jar
+    depends_on:
+      - database
+    ports:
+      - 8080:8080
+    networks:
+      - postgres_net
+    volumes:
+      - .:/home/app
+networks:
+  postgres_net:
+    name: postgres_network
+    driver: bridge
