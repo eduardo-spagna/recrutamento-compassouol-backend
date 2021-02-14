@@ -1,9 +1,12 @@
 package com.compassouol.backendrecruitment.services;
 
+import java.util.List;
+
 import com.compassouol.backendrecruitment.dtos.request.city.CreateCityRequestDTO;
 import com.compassouol.backendrecruitment.models.City;
 import com.compassouol.backendrecruitment.models.State;
 import com.compassouol.backendrecruitment.repositories.CityRepository;
+import com.compassouol.backendrecruitment.utils.StringUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +19,23 @@ public class CityService {
     public City create(CreateCityRequestDTO createCity, State state) {
         City city = new City();
 
+        StringUtil stringUtil = new StringUtil();
+
         city.setCityName(createCity.getCityName());
+        city.setCityNameNormalized(stringUtil.normalizeString(createCity.getCityName()));
         city.setState(state);
 
         return cityRepository.save(city);
+    }
+
+    public List<City> findAllWithSearch(String search) {
+        if (search == null) {
+            search = "";
+        } else {
+            StringUtil stringUtil = new StringUtil();
+            search = stringUtil.normalizeString(search);
+        }
+
+        return cityRepository.findAllWithSearch(search);
     }
 }
