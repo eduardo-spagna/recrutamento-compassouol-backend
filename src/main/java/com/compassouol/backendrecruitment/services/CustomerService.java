@@ -1,5 +1,7 @@
 package com.compassouol.backendrecruitment.services;
 
+import java.util.List;
+
 import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.models.City;
 import com.compassouol.backendrecruitment.models.Customer;
@@ -25,5 +27,15 @@ public class CustomerService {
         customer.setCity(city);
 
         return customerRepository.save(customer);
+    }
+
+    public List<Customer> findAllWithSearch(String search) {
+        if (search == null) {
+            search = "";
+        } else {
+            search = StringUtil.normalizeString(search);
+        }
+
+        return customerRepository.findAllWithSearch(search);
     }
 }
