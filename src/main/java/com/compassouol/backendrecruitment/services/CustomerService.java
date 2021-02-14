@@ -1,6 +1,7 @@
 package com.compassouol.backendrecruitment.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.models.City;
@@ -37,5 +38,15 @@ public class CustomerService {
         }
 
         return customerRepository.findAllWithSearch(search);
+    }
+
+    public Customer findById(long id) {
+        Optional<Customer> customer = customerRepository.findById(id);
+
+        if (customer.isPresent() == true) {
+            return customer.get();
+        }
+
+        return null;
     }
 }
