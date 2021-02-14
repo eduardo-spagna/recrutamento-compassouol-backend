@@ -7,11 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "states")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class State implements Serializable {
     private static final long serialVersionUID = 1L;
 
