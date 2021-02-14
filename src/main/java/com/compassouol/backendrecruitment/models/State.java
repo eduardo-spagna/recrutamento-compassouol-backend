@@ -22,6 +22,9 @@ public class State implements Serializable {
     @Column(name = "state_name")
     private String stateName;
 
+    @Column(name = "state_name_normalized")
+    private String stateNameNormalized;
+
     @Column(name = "state_short_name")
     private String stateShortName;
 }
