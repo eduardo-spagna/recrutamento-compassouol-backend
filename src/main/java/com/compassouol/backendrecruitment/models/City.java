@@ -1,6 +1,7 @@
 package com.compassouol.backendrecruitment.models;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +27,15 @@ public class City implements Serializable {
 
     @Column(name = "city_name")
     private String cityName;
+
+    @Column(name = "city_name_normalized")
+    private String cityNameNormalized;
+
+    @Column(name = "city_created_at", updatable = false)
+    private LocalDateTime cityCreatedAt = LocalDateTime.now();
+
+    @Column(name = "city_updated_at")
+    private LocalDateTime cityUpdatedAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "state_id")

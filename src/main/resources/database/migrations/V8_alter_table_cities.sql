@@ -1,0 +1,3 @@
+ALTER TABLE cities ADD COLUMN city_name_normalized VARCHAR(40) NOT NULL;
+ALTER TABLE cities ADD COLUMN city_created_at TIMESTAMP NOT NULL;
+ALTER TABLE cities ADD COLUMN city_updated_at TIMESTAMP NOT NULL;
