@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import com.compassouol.backendrecruitment.dtos.request.city.CreateCityRequestDTO;
 import com.compassouol.backendrecruitment.dtos.response.ResponseDTO;
-import com.compassouol.backendrecruitment.dtos.response.city.CreateCityResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.city.ShowCityResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.state.ShowStateResponseDTO;
 import com.compassouol.backendrecruitment.models.City;
@@ -40,13 +39,13 @@ public class CityController {
 
     @PostMapping
     @ApiOperation(value = "Create a city")
-    public ResponseEntity<ResponseDTO<CreateCityResponseDTO>> create(
+    public ResponseEntity<ResponseDTO<ShowCityResponseDTO>> create(
             @Valid @RequestBody CreateCityRequestDTO createCity) {
         try {
             State state = stateService.findById(createCity.getStateId());
 
             if (state == null) {
-                ResponseDTO<CreateCityResponseDTO> response = new ResponseDTO<CreateCityResponseDTO>(
+                ResponseDTO<ShowCityResponseDTO> response = new ResponseDTO<ShowCityResponseDTO>(
                         "city/state-not-found", "Estado não encontrado", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -55,16 +54,16 @@ public class CityController {
 
             ShowStateResponseDTO showStateDTO = new ShowStateResponseDTO(state.getStateId(), state.getStateName(),
                     state.getStateShortName());
-            CreateCityResponseDTO createCityResponseDTO = new CreateCityResponseDTO(newCity.getCityId(),
+            ShowCityResponseDTO showCityResponseDTO = new ShowCityResponseDTO(newCity.getCityId(),
                     newCity.getCityName(), showStateDTO);
 
-            ResponseDTO<CreateCityResponseDTO> response = new ResponseDTO<CreateCityResponseDTO>(
-                    "city/successfully-created", "Cidade criada com sucesso", createCityResponseDTO);
+            ResponseDTO<ShowCityResponseDTO> response = new ResponseDTO<ShowCityResponseDTO>(
+                    "city/successfully-created", "Cidade criada com sucesso", showCityResponseDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             e.printStackTrace();
-            ResponseDTO<CreateCityResponseDTO> response = new ResponseDTO<CreateCityResponseDTO>("city/creating-error",
+            ResponseDTO<ShowCityResponseDTO> response = new ResponseDTO<ShowCityResponseDTO>("city/creating-error",
                     "Ocorreu um erro ao criar a cidade", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

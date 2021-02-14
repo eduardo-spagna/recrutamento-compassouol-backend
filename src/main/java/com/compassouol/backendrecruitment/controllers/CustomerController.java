@@ -9,7 +9,6 @@ import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRe
 import com.compassouol.backendrecruitment.dtos.request.customer.UpdateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.dtos.response.ResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.city.ShowCityResponseDTO;
-import com.compassouol.backendrecruitment.dtos.response.customer.CreateCustomerResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.customer.ShowCustomerResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.gender.ShowGenderResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.state.ShowStateResponseDTO;
@@ -52,13 +51,13 @@ public class CustomerController {
 
     @PostMapping
     @ApiOperation(value = "Create a customer")
-    public ResponseEntity<ResponseDTO<CreateCustomerResponseDTO>> create(
+    public ResponseEntity<ResponseDTO<ShowCustomerResponseDTO>> create(
             @Valid @RequestBody CreateCustomerRequestDTO createCustomer) {
         try {
             Gender gender = genderService.findById(createCustomer.getGenderId());
 
             if (gender == null) {
-                ResponseDTO<CreateCustomerResponseDTO> response = new ResponseDTO<CreateCustomerResponseDTO>(
+                ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
                         "customer/gender-not-found", "Gênero não encontrado", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -66,7 +65,7 @@ public class CustomerController {
             City city = cityService.findById(createCustomer.getCityId());
 
             if (city == null) {
-                ResponseDTO<CreateCustomerResponseDTO> response = new ResponseDTO<CreateCustomerResponseDTO>(
+                ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
                         "customer/city-not-found", "Cidade não encontrada", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
@@ -80,17 +79,17 @@ public class CustomerController {
             ShowCityResponseDTO showCityResponseDTO = new ShowCityResponseDTO(city.getCityId(), city.getCityName(),
                     new ShowStateResponseDTO(city.getState().getStateId(), city.getState().getStateName(),
                             city.getState().getStateShortName()));
-            CreateCustomerResponseDTO createCustomerResponseDTO = new CreateCustomerResponseDTO(
-                    newCustomer.getCustomerId(), newCustomer.getCustomerName(), newCustomer.getCustomerBirthdate(),
-                    customerAge, showGenderResponseDTO, showCityResponseDTO);
+            ShowCustomerResponseDTO showCustomerResponseDTO = new ShowCustomerResponseDTO(newCustomer.getCustomerId(),
+                    newCustomer.getCustomerName(), newCustomer.getCustomerBirthdate(), customerAge,
+                    showGenderResponseDTO, showCityResponseDTO);
 
-            ResponseDTO<CreateCustomerResponseDTO> response = new ResponseDTO<CreateCustomerResponseDTO>(
-                    "customer/successfully-created", "Cliente criado com sucesso", createCustomerResponseDTO);
+            ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
+                    "customer/successfully-created", "Cliente criado com sucesso", showCustomerResponseDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             e.printStackTrace();
-            ResponseDTO<CreateCustomerResponseDTO> response = new ResponseDTO<CreateCustomerResponseDTO>(
+            ResponseDTO<ShowCustomerResponseDTO> response = new ResponseDTO<ShowCustomerResponseDTO>(
                     "customer/creating-error", "Ocorreu um erro ao criar o cliente", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
