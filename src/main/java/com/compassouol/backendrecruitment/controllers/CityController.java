@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.compassouol.backendrecruitment.dtos.request.city.CreateCityRequestDTO;
+import com.compassouol.backendrecruitment.dtos.response.ErrorResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.ResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.city.ShowCityResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.state.ShowStateResponseDTO;
@@ -17,6 +18,7 @@ import com.compassouol.backendrecruitment.services.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,14 +41,23 @@ public class CityController {
 
     @PostMapping
     @ApiOperation(value = "Create a city")
-    public ResponseEntity<ResponseDTO<ShowCityResponseDTO>> create(
-            @Valid @RequestBody CreateCityRequestDTO createCity) {
+    public ResponseEntity<ResponseDTO<?>> create(@Valid @RequestBody CreateCityRequestDTO createCity,
+            BindingResult result) {
         try {
+            if (result.hasErrors() == true) {
+                ErrorResponseDTO<Object> errorResponseDTO = new ErrorResponseDTO<Object>(
+                        result.getFieldError().getCode(), result.getFieldError().getField(),
+                        result.getFieldError().getDefaultMessage(), result.getFieldError().getRejectedValue());
+                ResponseDTO<ErrorResponseDTO<Object>> response = new ResponseDTO<ErrorResponseDTO<Object>>(
+                        "city/invalid-data", "Dados inválidos", errorResponseDTO);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
             State state = stateService.findById(createCity.getStateId());
 
             if (state == null) {
-                ResponseDTO<ShowCityResponseDTO> response = new ResponseDTO<ShowCityResponseDTO>(
-                        "city/state-not-found", "Estado não encontrado", null);
+                ResponseDTO<ShowCityResponseDTO> response = new ResponseDTO<ShowCityResponseDTO>("city/state-not-found",
+                        "Estado não encontrado", null);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
 
