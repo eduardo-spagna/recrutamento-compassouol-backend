@@ -1,8 +1,5 @@
 package com.compassouol.backendrecruitment.services;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +9,19 @@ import com.compassouol.backendrecruitment.models.City;
 import com.compassouol.backendrecruitment.models.State;
 import com.compassouol.backendrecruitment.repositories.CityRepository;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class CityServiceTest {
     @TestConfiguration
     static class CityServiceTestConfiguration {
@@ -39,7 +37,7 @@ public class CityServiceTest {
     @MockBean
     private CityRepository cityRepository;
 
-    @Before
+    @BeforeEach
     public void setup() {
         // states
         State stateOfSP = new State(1L, "São Paulo", "sao_paulo", "SP");
@@ -82,28 +80,28 @@ public class CityServiceTest {
     @DisplayName("Should return a city named Belo Horizonte")
     public void shouldReturnBeloHorizonte() {
         City findCityById = cityService.findById(3L);
-        assertEquals("Belo Horizonte", findCityById.getCityName());
+        Assertions.assertEquals("Belo Horizonte", findCityById.getCityName());
     }
 
     @Test
     @DisplayName("Should return null when it does not find the city")
     public void shouldReturnNullWhenDoesntExist() {
         City findCityById = cityService.findById(7L);
-        assertNull(findCityById);
+        Assertions.assertNull(findCityById);
     }
 
     @Test
     @DisplayName("Should return five cities when not searched by city or state")
     public void shouldReturnFiveCitiesWithoutSearch() {
         List<City> allCities = cityService.findAllWithSearch(null);
-        assertEquals(5, allCities.size());
+        Assertions.assertEquals(5, allCities.size());
     }
 
     @Test
     @DisplayName("Should return two cities when searched by city or state with 'on'")
     public void shouldReturnTwoCitiesWithSearch() {
         List<City> allCities = cityService.findAllWithSearch("on");
-        assertEquals(2, allCities.size());
+        Assertions.assertEquals(2, allCities.size());
     }
 
     @Test
@@ -114,6 +112,6 @@ public class CityServiceTest {
 
         City newCity = cityService.create(createCity, stateOfRS);
 
-        assertEquals("porto_alegre", newCity.getCityNameNormalized());
+        Assertions.assertEquals("porto_alegre", newCity.getCityNameNormalized());
     }
 }
