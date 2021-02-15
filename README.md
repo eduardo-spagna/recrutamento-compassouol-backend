@@ -19,6 +19,10 @@ Considere o cadastro com dados básicos:
 
 ### Docker
 
+Pré Requisitos
+- [Docker](https://www.docker.com)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
 Basta executar o comando:
 
 ```
