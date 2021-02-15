@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.compassouol.backendrecruitment.dtos.request.customer.CreateCustomerRequestDTO;
 import com.compassouol.backendrecruitment.dtos.request.customer.UpdateCustomerRequestDTO;
+import com.compassouol.backendrecruitment.dtos.response.ErrorResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.ResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.city.ShowCityResponseDTO;
 import com.compassouol.backendrecruitment.dtos.response.customer.ShowCustomerResponseDTO;
@@ -23,6 +24,7 @@ import com.compassouol.backendrecruitment.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,9 +53,18 @@ public class CustomerController {
 
     @PostMapping
     @ApiOperation(value = "Create a customer")
-    public ResponseEntity<ResponseDTO<ShowCustomerResponseDTO>> create(
-            @Valid @RequestBody CreateCustomerRequestDTO createCustomer) {
+    public ResponseEntity<ResponseDTO<?>> create(@Valid @RequestBody CreateCustomerRequestDTO createCustomer,
+            BindingResult result) {
         try {
+            if (result.hasErrors() == true) {
+                ErrorResponseDTO<Object> errorResponseDTO = new ErrorResponseDTO<Object>(
+                        result.getFieldError().getCode(), result.getFieldError().getField(),
+                        result.getFieldError().getDefaultMessage(), result.getFieldError().getRejectedValue());
+                ResponseDTO<ErrorResponseDTO<Object>> response = new ResponseDTO<ErrorResponseDTO<Object>>(
+                        "customer/invalid-data", "Dados inválidos", errorResponseDTO);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
             Gender gender = genderService.findById(createCustomer.getGenderId());
 
             if (gender == null) {
@@ -173,9 +184,18 @@ public class CustomerController {
 
     @PutMapping("/{customerId}")
     @ApiOperation(value = "Update a customer")
-    public ResponseEntity<ResponseDTO<ShowCustomerResponseDTO>> update(
-            @Valid @RequestBody UpdateCustomerRequestDTO updateCustomer, @PathVariable long customerId) {
+    public ResponseEntity<ResponseDTO<?>> update(@Valid @RequestBody UpdateCustomerRequestDTO updateCustomer,
+            @PathVariable long customerId, BindingResult result) {
         try {
+            if (result.hasErrors() == true) {
+                ErrorResponseDTO<Object> errorResponseDTO = new ErrorResponseDTO<Object>(
+                        result.getFieldError().getCode(), result.getFieldError().getField(),
+                        result.getFieldError().getDefaultMessage(), result.getFieldError().getRejectedValue());
+                ResponseDTO<ErrorResponseDTO<Object>> response = new ResponseDTO<ErrorResponseDTO<Object>>(
+                        "customer/invalid-data", "Dados inválidos", errorResponseDTO);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
             Customer customer = customerService.findById(customerId);
 
             if (customer == null) {
