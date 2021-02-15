@@ -24,5 +24,5 @@ public class CreateCityRequestDTO implements Serializable {
 
     @NotNull(message = "O ID do estado é obrigatório")
     @ApiModelProperty(example = "16", required = true)
-    private long stateId;
+    private Long stateId;
 }
