@@ -25,15 +25,16 @@ public class CreateCustomerRequestDTO implements Serializable {
     @ApiModelProperty(example = "Eduardo Spagna", required = true)
     private String customerName;
 
+    @NotNull(message = "A data de nascimento é obrigatória")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @ApiModelProperty(example = "1999-06-05", required = true)
     private LocalDate customerBirthdate;
 
     @NotNull(message = "O ID do gênero é obrigatório")
     @ApiModelProperty(example = "1", required = true)
-    private long genderId;
+    private Long genderId;
 
     @NotNull(message = "O ID da cidade é obrigatório")
     @ApiModelProperty(example = "2", required = true)
-    private long cityId;
+    private Long cityId;
 }
